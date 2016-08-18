@@ -1,3 +1,5 @@
+package pokemon;
+
 import POGOProtos.Enums.PokemonIdOuterClass;
 import POGOProtos.Networking.Responses.ReleasePokemonResponseOuterClass;
 
@@ -11,6 +13,8 @@ import com.pokegoapi.util.PokeNames;
 
 import okhttp3.OkHttpClient;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,6 +22,12 @@ import java.util.Locale;
 public class DisplayInventories {
 	
 	public static void main(String[] args) {
+//		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("172.18.29.176", 8080));
+//		InetSocketAddress isa = InetSocketAddress.createUnresolved("172.18.29.176", 8080);
+//		Proxy proxy = new Proxy(Proxy.Type.HTTP, isa);
+//		System.out.println(isa.isUnresolved()+","+isa.getAddress()+","+isa.getHostName());
+//		OkHttpClient.Builder builder = new OkHttpClient.Builder().proxy(proxy);
+//		OkHttpClient http = builder.build();
 		OkHttpClient http = new OkHttpClient();
 		try {
 			// check readme for other example

@@ -1,3 +1,5 @@
+package pokemon;
+
 import POGOProtos.Enums.PokemonFamilyIdOuterClass;
 import POGOProtos.Enums.PokemonIdOuterClass.PokemonId;
 import POGOProtos.Inventory.EggIncubatorOuterClass;
