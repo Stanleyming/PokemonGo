@@ -36,13 +36,14 @@ public class SearchNearbyPokemon {
 			
 			OkHttpClient http = new OkHttpClient();
 			MapUtil mapUtil = new MapUtil();
+			PtcCredentialProvider ptc = new PtcCredentialProvider(http, ExampleLoginDetails.LOGIN, ExampleLoginDetails.PASSWORD);
 			PokemonGo go = new PokemonGo(new PtcCredentialProvider(http, ExampleLoginDetails.LOGIN,
 					ExampleLoginDetails.PASSWORD), http);
 			Map map = go.getMap();
-			int width = 7;
-			Double latitude = 22.277;
-			Double longitude = 114.161;
-			map.setDefaultWidth(1);
+			int width = 5;
+			Double latitude = 22.294881;
+			Double longitude = 114.166765;
+//			map.setDefaultWidth(1);
 			
 			// set location
 			go.setLocation(latitude, longitude, 0);
@@ -73,7 +74,7 @@ public class SearchNearbyPokemon {
 //		        	System.out.println("catchablePokemon_id: "+catchablePokemon.getPokemonId()+", Latitude: "+catchablePokemon.getLatitude()+", Longitude: "+catchablePokemon.getLongitude()+", Distance: "+ Math.round(mapUtil.distFrom(latitude, longitude, catchablePokemon.getLatitude(), catchablePokemon.getLongitude())*100) +"m, Expire: "+convertTime(catchablePokemon.getExpirationTimestampMs()));
 //		        }
 //			}
-
+/*
 			List<CatchablePokemon> catchablePokemon = (List<CatchablePokemon>) go.getMap().getCatchablePokemon();
 			System.out.println("Pokemon in area:" + catchablePokemon.size());
 			
@@ -81,25 +82,31 @@ public class SearchNearbyPokemon {
 				System.out.println("catchablePokemon_id: "+cp.getPokemonId()+", Latitude: "+cp.getLatitude()+", Longitude: "+cp.getLongitude()+", Distance: "+ Math.round(mapUtil.distFrom(latitude, longitude, cp.getLatitude(), cp.getLongitude())) +"m, Expire: "+convertTime(cp.getExpirationTimestampMs()));
 //				System.out.println("catchablePokemon_id: "+cp.getPokemonId()+", Distance: "+ Math.round(mapUtil.distFrom(latitude, longitude, cp.getLatitude(), cp.getLongitude())*100) +"m, Expire: "+convertTime(cp.getExpirationTimestampMs()));
 			}
-			
+*/
 			
 			
 			// Phase 2
 			List<CatchablePokemon> allCP = new ArrayList<CatchablePokemon>();
 			int halfWidth = (int)Math.floor(width / 2);
+			
+			System.out.println("Start: "+convertTime(System.currentTimeMillis()));
 			for (int x = -halfWidth; x <= halfWidth; x++) {
 				for (int y = -halfWidth; y <= halfWidth; y++) {
-					Double newLat = latitude + (x * 0.001);
-					Double newLng = longitude + (y * 0.001);
-					System.out.println("Lat: "+newLat+", Lng: "+newLng);
-					
+					Double newLat = latitude + (x * 0.00025); // each 0.0005 = 50m
+					Double newLng = longitude + (y * 0.00025); // each 0.0005 = 50m
+					System.out.println("Lat/Lng: "+newLat+", "+newLng);
+
 					go.setLocation(newLat, newLng, 0);
-					List<CatchablePokemon> tmpCP = go.getMap().getCatchablePokemon();
+					map = new Map(go);
+					map.setDefaultWidth(1);
+					List<CatchablePokemon> tmpCP = map.getCatchablePokemon();
 					
-					for (CatchablePokemon cp : tmpCP) {
-						System.out.println(cp.getPokemonId());
-						if (!allCP.contains(cp)) {
-							allCP.add(cp);
+					if (tmpCP != null) {
+						for (CatchablePokemon cp : tmpCP) {
+	//						System.out.println(cp.getPokemonId());
+							if (!allCP.contains(cp)) {
+								allCP.add(cp);
+							}
 						}
 					}
 				}
@@ -107,8 +114,10 @@ public class SearchNearbyPokemon {
 			
 			System.out.println("Phase 2");
 			for (CatchablePokemon cp : allCP) {
-				System.out.println("catchablePokemon_id: "+cp.getPokemonId()+", Latitude: "+cp.getLatitude()+", Longitude: "+cp.getLongitude()+", Distance: "+ Math.round(mapUtil.distFrom(latitude, longitude, cp.getLatitude(), cp.getLongitude())) +"m, Expire: "+convertTime(cp.getExpirationTimestampMs()));
+				System.out.println("Catchable Pokemon: "+cp.getPokemonId()+"("+cp.getPokemonIdValue()+"), Lat/Lng: "+cp.getLatitude()+", "+cp.getLongitude()+", Distance: "+ Math.round(mapUtil.distFrom(latitude, longitude, cp.getLatitude(), cp.getLongitude())) +"m, Expire: "+convertTime(cp.getExpirationTimestampMs()));
 			}
+			
+			System.out.println("End: "+convertTime(System.currentTimeMillis()));
 			
 		} catch (LoginFailedException | RemoteServerException e) {
 			// failed to login, invalid credentials, auth issue or server issue.
@@ -123,5 +132,9 @@ public class SearchNearbyPokemon {
 //	    Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss.SSS");
 	    Format format = new SimpleDateFormat("HH:mm:ss");
 	    return format.format(date);
+	}
+	
+	private static void addCP(PokemonGo go, Double lat, Double lng, List<CatchablePokemon> allCP) {
+		
 	}
 }

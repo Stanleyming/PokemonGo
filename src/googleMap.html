@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; }
+      #map { height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script type="text/javascript">
+
+    var map;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 22.295231, lng: 114.168319},
+      zoom: 17
+    });
+
+    var image = 'pixel_icons/143.png';
+    var beachMarker = new google.maps.Marker({
+      position: {lat: 22.295231, lng: 114.168319},
+      map: map,
+      icon: image
+    });
+
+    beachMarker = new google.maps.Marker({
+      position: {lat: 22.294831, lng: 114.167819},
+      map: map,
+      icon: image
+    });
+
+    beachMarker = new google.maps.Marker({
+      position: {lat: 22.297331, lng: 114.167519},
+      map: map,
+      icon: image
+    });
+}
+
+    </script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACW2PWNEL0vySOXgbsMZwYtiXK8J0TeoU&callback=initMap">
+    </script>
+  </body>
+</html>
